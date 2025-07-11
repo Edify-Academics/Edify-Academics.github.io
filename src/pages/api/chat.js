@@ -22,6 +22,9 @@ export default async function handler(req, res) {
     // Add new chat message to KV
     await kv.rpush(`chat:${user}`, JSON.stringify(chat));
 
+    // ✅ Publish message to a global Redis pubsub channel
+    await kv.publish('chat:global', JSON.stringify(chat));
+
     return res.status(200).json({ success: true });
   }
 
